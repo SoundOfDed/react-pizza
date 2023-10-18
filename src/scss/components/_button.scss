@@ -61,6 +61,16 @@
       color: $orange;
     }
 
+    &--none {
+      background-color: #fff;
+      border-color: #dddddd;
+      cursor: auto;
+
+      &:hover {
+        background-color: #fff;
+      }
+    }
+
     svg {
       path {
         fill: $orange;

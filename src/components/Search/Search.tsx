@@ -1,32 +1,31 @@
 import classes from "./Search.module.scss"
 import clearSvg from '../../assets/img/clear-svgrepo-com.svg'
-import { SearchContext } from '../../App'
-import { useCallback, useContext, useRef, useState } from "react"
+import { setSearchInput } from '../../redux/filter/slice'
+import { useCallback, useRef, useState, FC, ChangeEvent } from "react"
 import debounce from "lodash.debounce"
+import { useDispatch } from "react-redux"
 
 
-const Search = () => {
-
+const Search: FC = () => {
+    const dispatch = useDispatch();
     const [value, setValue] = useState('')
-    const { setSearchInput } = useContext(SearchContext);
 
-
-    const inputRef = useRef()
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const updateSearchValue = useCallback(
-        debounce(str => {
-            setSearchInput(str);
+        debounce((str: string) => {
+            dispatch(setSearchInput(str));
         }, 250),
         []
     )
 
     const onClickClear = () => {
+        dispatch(setSearchInput(''))
         setValue('')
-        setSearchInput('');
-        inputRef.current.focus();
+        inputRef.current?.focus();
     }
 
-    const onChangeInput = (event) => {
+    const onChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value);
         updateSearchValue(event.target.value);
     }

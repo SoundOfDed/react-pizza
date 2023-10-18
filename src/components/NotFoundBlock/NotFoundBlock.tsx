@@ -1,7 +1,7 @@
-import React from 'react';
+import { FC } from 'react';
 import classes from './NotFoundBlock.module.scss'
 
-const NotFoundBlock = () => {
+const NotFoundBlock: FC = () => {
     return (
         <div className={classes.main}>
             <h1>Ничего не найдено(</h1>

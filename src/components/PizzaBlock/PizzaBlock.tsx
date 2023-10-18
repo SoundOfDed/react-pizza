@@ -1,11 +1,23 @@
-import { useState } from 'react'
+import { useState, FC } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { addItem } from '../../redux/slices/cartSlice'
+import { CartItem } from '../../redux/cart/types'
+import { addItem, selectCartItemById } from '../../redux/cart/slice'
 
-const PizzaBlock = ({ id, title, price, imageUrl, sizes, types }) => {
+import { Link } from 'react-router-dom'
+
+type PizzaBlockProps = {
+    id: string;
+    title: string;
+    price: number;
+    imageUrl: string;
+    sizes: number[];
+    types: number[];
+}
+
+const PizzaBlock: FC<PizzaBlockProps> = ({ id, title, price, imageUrl, sizes, types }) => {
 
     const dispatch = useDispatch();
-    const cartItem = useSelector(state => state.cartSlice.items.find(obj => obj.id === id))
+    const cartItem = useSelector(selectCartItemById(id))
     const [activeType, setActiveType] = useState(0)
     const [activeSize, setActiveSize] = useState(0)
     const typeNames = ['тонкое', 'традиционное']
@@ -13,13 +25,14 @@ const PizzaBlock = ({ id, title, price, imageUrl, sizes, types }) => {
     const addedCount = cartItem ? cartItem.count : 0;
 
     const onClickAdd = () => {
-        const item = {
+        const item: CartItem = {
             id,
             title,
             price,
             imageUrl,
             type: typeNames[activeType],
-            size: sizes[activeSize]
+            size: sizes[activeSize],
+            count: 0,
         };
         dispatch(addItem(item));
     };
@@ -27,12 +40,16 @@ const PizzaBlock = ({ id, title, price, imageUrl, sizes, types }) => {
     return (
         <div className='pizza-block-wrapper'>
             <div className="pizza-block">
-                <img
-                    className="pizza-block__image"
-                    src={imageUrl}
-                    alt="Pizza"
-                />
+                <Link to={`pizza/${id}`}>
+                    <img
+                        className="pizza-block__image"
+                        src={imageUrl}
+                        alt="Pizza"
+                    />
+                
+
                 <h4 className="pizza-block__title">{title}</h4>
+                </Link>
                 <div className="pizza-block__selector">
                     <ul>
                         {
